@@ -1,0 +1,171 @@
+/* ================================
+   Global Styles
+================================ */
+body {
+    font-family: 'Georgia', serif;
+    margin: 0;
+    padding: 0;
+    color: #3b2f2f; /* dark brown */
+    scroll-behavior: smooth;
+    background: #f4efe6; /* fallback */
+}
+
+a {
+    text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Georgia', serif;
+}
+
+/* ================================
+   Slides / Scroll Snap
+================================ */
+.slides-container {
+    height: 100vh;
+    width: 100vw;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+}
+
+.slide {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: start;
+    padding: 2rem;
+    box-sizing: border-box;
+    background-color: transparent;
+    transition: background 0.5s ease;
+}
+
+/* Example Gradient Backgrounds for Slides */
+.slide.bg1 { background: linear-gradient(135deg, #f4efe6, #d9c9a0); }
+.slide.bg2 { background: linear-gradient(135deg, #e0d4c2, #c9b79c); }
+.slide.bg3 { background: linear-gradient(135deg, #d4c0aa, #bfa480); }
+.slide.bg4 { background: linear-gradient(135deg, #c9b79c, #a67c52); }
+
+/* ================================
+   Splash Screen
+================================ */
+#splash {
+    transition: opacity 1s ease;
+}
+
+#splash.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ================================
+   Buttons
+================================ */
+button, .slide a.button {
+    position: relative;
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px; /* pill shape */
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    background: linear-gradient(135deg, #5a3e2b, #8d6748);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+button:hover, .slide a.button:hover {
+    background: linear-gradient(135deg, #8d6748, #a67c52);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+/* ================================
+   Animations
+================================ */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 1s ease forwards;
+}
+
+/* ================================
+   Form Inputs
+================================ */
+input[type="text"], input[type="file"], select, textarea {
+    font-family: 'Georgia', serif;
+    border: 1px solid #3b2f2f;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="file"]:focus, select:focus, textarea:focus {
+    border-color: #5a403f;
+    box-shadow: 0 0 5px rgba(91,64,63,0.5);
+}
+
+/* ================================
+   Tables
+================================ */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table th, table td {
+    border: 1px solid #3b2f2f;
+    padding: 0.75rem 1rem;
+}
+
+table th {
+    background-color: #3b2f2f;
+    color: white;
+}
+
+table tr:nth-child(odd) {
+    background-color: #f4efe6;
+}
+
+table tr:nth-child(even) {
+    background-color: #d4c0aa;
+}
+
+/* ================================
+   Graph / Canvas
+================================ */
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* ================================
+   Utility / Responsive
+================================ */
+@media (max-width: 768px) {
+    .slide {
+        padding: 1rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    h1 {
+        font-size: 3rem;
+    }
+}
