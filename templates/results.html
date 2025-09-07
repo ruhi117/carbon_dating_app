@@ -1,67 +1,78 @@
 {% extends "base.html" %}
 {% block content %}
 
-<section class="min-h-screen flex flex-col items-center justify-center bg-[#e0d4c2] text-[#2b1d1d] p-8">
+<h1 class="text-3xl font-extrabold mb-8 text-center text-amber-900">Carbon Dating Results</h1>
 
-    <h2 class="text-3xl font-bold mb-6 text-center">Calibrated Carbon-14 Results</h2>
+<!-- Results Table -->
+<div class="overflow-x-auto mb-10">
+  <table class="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">
+    <thead class="bg-amber-200 text-amber-900 uppercase text-sm font-semibold">
+      <tr>
+        <th class="p-3 text-left">14C Age (BP)</th>
+        <th class="p-3 text-left">Calibrated Age</th>
+        <th class="p-3 text-left">Soil pH</th>
+        <th class="p-3 text-left">Depth (cm)</th>
+        <th class="p-3 text-left">Location</th>
+        <th class="p-3 text-left">Material</th>
+        <th class="p-3 text-left">Recommendations</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in results %}
+      <tr class="border-b hover:bg-amber-50 transition">
+        <td class="p-3">{{ r.c14_age }}</td>
+        <td class="p-3">{{ r.calibrated_age if r.calibrated_age else 'N/A' }}</td>
+        <td class="p-3">{{ r.soil_pH if r.soil_pH else '-' }}</td>
+        <td class="p-3">{{ r.depth if r.depth else '-' }}</td>
+        <td class="p-3">{{ r.location if r.location else '-' }}</td>
+        <td class="p-3">{{ r.material if r.material else '-' }}</td>
+        <td class="p-3 text-sm text-stone-700">
+          {% if r.warnings %}
+            • {{ r.warnings[0] }}<br>
+            {% if r.warnings|length > 1 %}
+              <span class="text-stone-500 italic">+ {{ r.warnings|length - 1 }} more</span>
+            {% endif %}
+          {% else %}
+            No issues detected
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
-    {% if message %}
-        <p class="text-red-700 font-semibold mb-4">{{ message }}</p>
-    {% endif %}
+<!-- Calibration Graph -->
+{% if img_str %}
+<div class="mb-10 p-5 bg-white shadow rounded-lg">
+    <h2 class="font-bold text-xl text-amber-800 mb-3">Calibration Graph</h2>
+    <img src="data:image/png;base64,{{ img_str }}" class="rounded shadow w-full" alt="Calibration Graph">
+</div>
+{% endif %}
 
-    {% if results %}
-        <!-- Results Table -->
-        <div class="overflow-x-auto w-full max-w-4xl mb-6">
-            <table class="w-full border-collapse border border-[#3b2f2f] rounded-lg">
-                <thead class="bg-[#3b2f2f] text-white">
-                    <tr>
-                        <th class="py-2 px-4 border border-[#3b2f2f]">Sample</th>
-                        <th class="py-2 px-4 border border-[#3b2f2f]">C-14 Age (BP)</th>
-                        <th class="py-2 px-4 border border-[#3b2f2f]">Calibrated Age (cal BP)</th>
-                        <th class="py-2 px-4 border border-[#3b2f2f]">Warnings</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in results %}
-                        <tr class="odd:bg-[#f4efe6] even:bg-[#d4c0aa]">
-                            <td class="py-2 px-4 border border-[#3b2f2f]">{{ loop.index }}</td>
-                            <td class="py-2 px-4 border border-[#3b2f2f]">{{ row.c14_age }}</td>
-                            <td class="py-2 px-4 border border-[#3b2f2f]">
-                                {% if row.calibrated_age is not none %}
-                                    {{ row.calibrated_age }}
-                                {% else %}
-                                    ⚠️ Out of range
-                                {% endif %}
-                            </td>
-                            <td class="py-2 px-4 border border-[#3b2f2f] text-sm">
-                                {% for w in row.warnings %}
-                                    <div>{{ w }}</div>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<!-- Detailed Summaries -->
+{% if summaries %}
+<div class="space-y-6 mb-10">
+    <h2 class="text-2xl font-bold text-amber-900">Detailed Summaries</h2>
+    {% for summary in summaries %}
+        <div class="bg-amber-50 border-l-4 border-amber-500 p-5 rounded shadow">
+            <pre class="whitespace-pre-wrap text-stone-800">{{ summary }}</pre>
         </div>
+    {% endfor %}
+</div>
+{% endif %}
 
-        <!-- Calibration Graph -->
-        {% if img_str %}
-            <div class="w-full max-w-4xl bg-white p-6 rounded-xl shadow-lg mb-6">
-                <h3 class="text-xl font-semibold mb-4">Calibration Curve</h3>
-                <img src="data:image/png;base64,{{ img_str }}" alt="Calibration Graph" class="w-full rounded-lg">
-            </div>
-        {% endif %}
-    {% else %}
-        <p class="text-lg opacity-80">No results yet. Please go back and enter your data.</p>
-    {% endif %}
+<!-- Navigation Buttons -->
+<div class="mt-10 text-center space-x-6">
+    <a href="{{ url_for('input_page') }}" 
+       class="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-600 text-white font-semibold rounded-lg shadow-lg hover:from-orange-600 hover:to-amber-700 transition-all duration-300">
+       Back To Calculator
+    </a>
 
-    <div class="mt-4">
-        <a href="{{ url_for('input_page') }}"
-           class="px-6 py-3 bg-[#3b2f2f] text-white rounded-lg shadow-md hover:bg-[#5a403f] transition">
-           Back to Calculator →
-        </a>
-    </div>
-
-</section>
+    <a href="{{ url_for('home') }}" 
+       class="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg shadow-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-300">
+       Back to Home
+    </a>
+</div>
 
 {% endblock %}
