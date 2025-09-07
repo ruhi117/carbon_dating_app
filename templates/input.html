@@ -1,42 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 
-<section class="min-h-screen flex items-center justify-center bg-[#f4efe6] text-[#3b2f2f]">
-    <div class="w-full max-w-lg bg-white rounded-2xl shadow-xl p-8">
+<section class="max-w-3xl mx-auto my-12 bg-white p-8 rounded-2xl shadow-lg">
+    <h2 class="text-3xl font-bold mb-6 text-center">Carbon-14 Calculator</h2>
 
-        <!-- Title -->
-        <h2 class="text-3xl font-bold mb-4 text-center">Carbon Dating Calculator</h2>
-        <p class="text-center mb-8 text-lg opacity-80">Enter your data to reveal calibrated results</p>
+    {% if message %}
+        <p class="text-red-700 font-semibold mb-4">{{ message }}</p>
+    {% endif %}
 
-        <!-- Form -->
-        <form method="POST" enctype="multipart/form-data" class="space-y-6">
-
-            <!-- Text Input -->
-            <div>
-                <label class="block mb-2 font-semibold">Enter C-14 Age (BP):</label>
-                <input type="text" name="c14_age"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3b2f2f] focus:outline-none">
-            </div>
-
-            <!-- File Upload -->
-            <div>
-                <label class="block mb-2 font-semibold">Or Upload CSV (with column <code>c14_age</code>):</label>
-                <input type="file" name="file"
-                       class="w-full text-gray-600 file:mr-4 file:py-2 file:px-4 
-                              file:rounded-full file:border-0 file:text-sm file:font-semibold
-                              file:bg-[#3b2f2f] file:text-white hover:file:bg-[#5a403f]">
-            </div>
-
-            <!-- Submit -->
-            <div class="text-center">
-                <button type="submit"
-                        class="px-6 py-3 bg-[#3b2f2f] text-white rounded-lg shadow-md hover:bg-[#5a403f] transition">
-                    Calculate →
-                </button>
-            </div>
-
-        </form>
-    </div>
+    <form method="POST" class="space-y-4">
+        <input type="text" name="c14_age" placeholder="C-14 Age (BP)" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-amber-400">
+        <input type="text" name="material" placeholder="Sample Type (Bone, Wood, etc.)" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-amber-400">
+        <input type="text" name="contamination" placeholder="Contamination (%)" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-amber-400">
+        <input type="text" name="soil_pH" placeholder="Soil pH" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-amber-400">
+        <input type="text" name="depth" placeholder="Depth (cm)" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-amber-400">
+        <input type="text" name="location" id="location" placeholder="e.g., Site A, Valley X" 
+               class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-amber-400">
+        <input type="file" name="file" id="file" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-amber-400">
+        <button type="submit" class="w-full bg-[#3b2f2f] text-white py-3 rounded-lg hover:bg-[#5a403f] transition">Calculate</button>
+    </form>
 </section>
 
 {% endblock %}
