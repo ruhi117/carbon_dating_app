@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="slides-container h-screen w-screen overflow-y-scroll snap-y snap-mandatory">
+
+  <!-- Slide 1 -->
+  <section class="slide snap-start h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#f4efe6] to-[#d9c9a5] ">
+    <h2 class="text-6xl font-bold mb-6">Journey Through Time</h2>
+    <p class="text-2xl text-center max-w-2xl">Explore how Carbon-14 dating helps archaeologists reveal history.</p>
+  </section>
+
+  <!-- Slide 2 -->
+  <section class="slide snap-start h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#e0d4c2] to-[#c9b79c] ">
+    <h2 class="text-5xl font-bold mb-6">The Science of Carbon-14</h2>
+    <p class="text-xl text-center max-w-2xl">Living things absorb C-14. After death, it decays, leaving a timeline to measure age.</p>
+  </section>
+
+  <!-- Slide 3 -->
+  <section class="slide snap-start h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#d4b48f] to-[#a67c52] ">
+    <h2 class="text-5xl font-bold mb-6">Applications</h2>
+    <p class="text-xl text-center mb-6 max-w-2xl">From archaeology to climate science, Carbon-14 helps unlock timelines.</p>
+    <a href="{{ url_for('input_page') }}" class="px-6 py-3 bg-[#3b2f2f] text-white rounded-lg shadow-lg hover:bg-[#5a403f] transition btn btn-brown">
+      Try the Calculator →
+    </a>
+  </section>
+
+  <!-- Slide 4 -->
+  <section class="slide snap-start h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#bfa57a] to-[#8d6748] ">
+    <h2 class="text-5xl font-bold mb-6">Fun Fact</h2>
+    <p class="text-xl text-center max-w-2xl">Some samples are over 50,000 years old! C-14 is reliable only within certain limits.</p>
+    <a href="{{ url_for('home') }}" class="mt-10 px-6 py-3 bg-[#3b2f2f] text-white rounded-lg shadow-lg hover:bg-[#5a403f] transition btn btn-brown">
+      ← Back to Home
+    </a>
+  </section>
+
+  <!-- About Section -->
+  <section class="slide snap-start h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#8d6748] to-[#bfa57a] px-6">
+    <h2 class="text-5xl font-bold mb-8 text-white">About CodeHers</h2>
+    <p class="text-xl text-center max-w-2xl mb-12 text-white">
+      This website is created by <strong>CodeHers</strong>, a team of three passionate members. 
+      Our goal is to make Carbon-14 dating accessible and interactive for everyone.
+    </p>
+
+
+  <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+    <!-- Member 1 Card -->
+    <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center w-64 transform transition duration-300 hover:scale-105 hover:shadow-2xl">
+      <h3 class="font-semibold text-lg mb-4">DIVYANSI BABU</h3>
+      <div class="flex space-x-3">
+        <a href="https://www.instagram.com/div_yansi_2006/" target="_blank" 
+           class="px-3 py-1 bg-pink-500 text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-110 hover:bg-pink-600">IG</a>
+        <a href="https://github.com/divyansi-ux" target="_blank" 
+           class="px-3 py-1 bg-gray-800 text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-110 hover:bg-gray-900">GitHub</a>
+        <a href="https://www.linkedin.com/in/divyansi-babu-726876313?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" 
+           class="px-3 py-1 bg-blue-600 text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-110 hover:bg-blue-700">LinkedIn</a>
+      </div>
+    </div>
+
+    <!-- Member 2 Card -->
+    <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center w-64 transform transition duration-300 hover:scale-105 hover:shadow-2xl">
+      <h3 class="font-semibold text-lg mb-4">ANWESHA SAHU</h3>
+      <div class="flex space-x-3">
+        <a href="https://www.instagram.com/_anwesha_sahu10?utm_source=qr&igsh=MXh3NW9kam5tZmZ2aw==" target="_blank" 
+           class="px-3 py-1 bg-pink-500 text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-110 hover:bg-pink-600">IG</a>
+        <a href="https://github.com/Anwesha878" target="_blank" 
+           class="px-3 py-1 bg-gray-800 text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-110 hover:bg-gray-900">GitHub</a>
+        <a href="https://www.linkedin.com/in/anwesha-sahu-60b698368?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" 
+           class="px-3 py-1 bg-blue-600 text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-110 hover:bg-blue-700">LinkedIn</a>
+      </div>
+    </div>
+
+    <!-- Member 3 Card -->
+    <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center w-64 transform transition duration-300 hover:scale-105 hover:shadow-2xl">
+      <h3 class="font-semibold text-lg mb-4">DEBASMITA RAUT</h3>
+      <div class="flex space-x-3">
+        <a href="https://github.com/ruhi117" target="_blank" 
+           class="px-3 py-1 bg-gray-800 text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-110 hover:bg-gray-900">GitHub</a>
+        <a href="https://www.linkedin.com/in/debasmita-raut-892306332?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" 
+           class="px-3 py-1 bg-blue-600 text-white rounded-lg transition duration-300 ease-in-out transform hover:scale-110 hover:bg-blue-700">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+
+  <a href="{{ url_for('input_page') }}" 
+     class="mt-12 px-6 py-3 bg-[#3b2f2f] text-white rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-110 hover:bg-[#5a403f]">
+    Try the Calculator →
+  </a>
+</section>
+
+
+</div>
+
+<script>
+  // GSAP ScrollTrigger to animate slides
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray(".slide").forEach(slide => {
+    gsap.fromTo(slide,
+      { opacity: 0, y: 50 },
+      { 
+        opacity: 1, 
+        y: 0, 
+        duration: 1,
+        scrollTrigger: {
+          trigger: slide,
+          start: "top 80%",
+          toggleActions: "play none none none"
+        }
+      }
+    );
+  }); 
+</script>
+
+
+{% endblock %}
+
