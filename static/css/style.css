@@ -1,171 +1,124 @@
-/* ================================
-   Global Styles
-================================ */
-body {
-    font-family: 'Georgia', serif;
-    margin: 0;
-    padding: 0;
-    color: #3b2f2f; /* dark brown */
-    scroll-behavior: smooth;
-    background: #f4efe6; /* fallback */
-}
 
-a {
-    text-decoration: none;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Georgia', serif;
-}
-
-/* ================================
-   Slides / Scroll Snap
-================================ */
-.slides-container {
-    height: 100vh;
-    width: 100vw;
-    overflow-y: scroll;
-    scroll-snap-type: y mandatory;
-}
-
-.slide {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    scroll-snap-align: start;
-    padding: 2rem;
-    box-sizing: border-box;
-    background-color: transparent;
-    transition: background 0.5s ease;
-}
-
-/* Example Gradient Backgrounds for Slides */
-.slide.bg1 { background: linear-gradient(135deg, #f4efe6, #d9c9a0); }
-.slide.bg2 { background: linear-gradient(135deg, #e0d4c2, #c9b79c); }
-.slide.bg3 { background: linear-gradient(135deg, #d4c0aa, #bfa480); }
-.slide.bg4 { background: linear-gradient(135deg, #c9b79c, #a67c52); }
-
-/* ================================
-   Splash Screen
-================================ */
-#splash {
-    transition: opacity 1s ease;
-}
-
-#splash.hide {
+.animate-fadeInUp {
     opacity: 0;
-    pointer-events: none;
+    transform: translateY(20px);
+    animation: fadeInUp 1s forwards;
 }
+.animate-fadeInUp.delay-300 { animation-delay: 0.3s; }
+.animate-fadeInUp.delay-500 { animation-delay: 0.5s; }
 
-/* ================================
-   Buttons
-================================ */
-button, .slide a.button {
-    position: relative;
-    display: inline-block;
-    padding: 0.75rem 2rem;
-    border-radius: 9999px; /* pill shape */
-    font-weight: 700;
-    color: #fff;
-    text-decoration: none;
-    background: linear-gradient(135deg, #5a3e2b, #8d6748);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-    transition: all 0.3s ease;
-    overflow: hidden;
-    margin-top: 1rem;
-}
-
-button:hover, .slide a.button:hover {
-    background: linear-gradient(135deg, #8d6748, #a67c52);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-}
-
-/* ================================
-   Animations
-================================ */
 @keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    to { opacity: 1; transform: translateY(0); }
 }
+
 
 .fade-in-up {
-    animation: fadeInUp 1s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
-/* ================================
-   Form Inputs
-================================ */
-input[type="text"], input[type="file"], select, textarea {
-    font-family: 'Georgia', serif;
-    border: 1px solid #3b2f2f;
-    border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
-    outline: none;
-    transition: all 0.3s ease;
+.fade-in-up.appear {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-input[type="text"]:focus, input[type="file"]:focus, select:focus, textarea:focus {
-    border-color: #5a403f;
-    box-shadow: 0 0 5px rgba(91,64,63,0.5);
+
+.animated-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(270deg, #5a403f, #bfa57a, #f4e1c1, #5a403f); 
+  background-size: 1200% 1200%;
+  z-index: -1;
+  animation: gradientMove 12s ease infinite; 
 }
 
-/* ================================
-   Tables
-================================ */
-table {
-    border-collapse: collapse;
-    width: 100%;
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-table th, table td {
-    border: 1px solid #3b2f2f;
-    padding: 0.75rem 1rem;
+.flowing-text {
+  display: inline-block;
+  animation: floatText 3s ease-in-out infinite alternate;
 }
 
-table th {
-    background-color: #3b2f2f;
-    color: white;
+@keyframes floatText {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
 }
 
-table tr:nth-child(odd) {
-    background-color: #f4efe6;
+.btn {
+  padding: 0.75rem 1.5rem; 
+  border-radius: 0.5rem;   
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  transition: all 0.3s ease-in-out; 
+  display: inline-block;
 }
 
-table tr:nth-child(even) {
-    background-color: #d4c0aa;
+.btn:hover {
+  transform: scale(1.10); 
 }
 
-/* ================================
-   Graph / Canvas
-================================ */
-canvas {
-    width: 100% !important;
-    height: auto !important;
+
+.btn-brown {
+  background-color: #3b2f2f;
+  color: white;
 }
 
-/* ================================
-   Utility / Responsive
-================================ */
-@media (max-width: 768px) {
-    .slide {
-        padding: 1rem;
-    }
+.btn-brown:hover {
+  background-color: #5a403f;
+}
 
-    h2 {
-        font-size: 2rem;
-    }
 
-    h1 {
-        font-size: 3rem;
-    }
+.btn-light {
+  background-color: white;
+  color: #3b2f2f;
+}
+
+.btn-light:hover {
+  background-color: #e5e7eb;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-flex;       
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+  padding: 0.5rem 1rem;       
+}
+
+.nav-link:hover {
+  transform: scale(1.05);
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;               
+  left: 50%;                 
+  width: 0%;
+  height: 2px;
+  background-color: white;
+  transform: translateX(-50%);
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-link:hover::after {
+  width: 60%;                 
+}
+
+.sure{
+  color: #f4d58e;
+}
+.sure::first-letter{
+  font-size: 1.6em;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
