@@ -1,21 +1,73 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carbon Dating App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon Dating Explorer</title>
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+ 
+   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+ 
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="text-brown font-serif">
-    
-    {% block content %}{% endblock %}
+<body class="bg-[#f4efe6] text-[#3b2f2f] font-serif overflow-x-hidden">
+  
+  <!-- Navbar -->
+  <nav class="fixed w-full z-50 bg-[#000000] text-white shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+      <div class="flex items-center space-x-3">
+        <img src="{{ url_for('static', filename='images/logo2.jpg') }}" class="h-16 w-auto object-contain">
+        <span class="font-bold text-xl md:text-2xl">Chrono<span class="sure">Sure</span></span>
+      </div>
+      <ul id="desktop-menu" class="hidden md:flex space-x-6 font-medium">
+        <li><a href="{{ url_for('home') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ url_for('slides') }}" class="nav-link">Journey</a></li>
+        <li><a href="{{ url_for('input_page') }}" class="nav-link">Calculator</a></li>
+        <li><a href="{{ url_for('results') }}" class="nav-link">Results</a></li>
+      </ul>
 
-    <!-- JS -->
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+      <!-- Mobile Menu Button -->
+      <button id="menu-btn" class="md:hidden focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16m-7 6h7"/>
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#3b2f2f] text-white p-4 space-y-4">
+      <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+      <a href="{{ url_for('slides') }}" class="nav-link">Journey</a>
+      <a href="{{ url_for('input_page') }}" class="nav-link">Calculator</a>
+      <a href="{{ url_for('results') }}" class="nav-link">Results</a>
+</div>
+
+  </nav>
+
+  <!-- Page Content -->
+  <main class="pt-24">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script>
+    
+    const btn = document.getElementById('menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  </script>
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
 </body>
+
 </html>
