@@ -1,71 +1,82 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- Splash Screen -->
-<div id="splash" class="fixed inset-0 flex items-center justify-center bg-[#3b2f2f] text-white z-50">
-    <div class="text-center">
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="mx-auto w-32 h-32 mb-4 animate-bounce">
-        <h1 class="text-4xl font-bold mb-2">Carbon Dating Explorer</h1>
-        <p class="text-lg opacity-80">Uncover the Past, One Layer at a Time</p>
-    </div>
-</div>
+<!-- Hero Section: Video only -->
+<section class="relative h-screen w-full overflow-hidden flex items-center justify-center">
+  <!-- Video -->
+  <video id="hero-video" autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover">
+    <source src="{{ url_for('static', filename='videos/hero.mp4') }}" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 
-<!-- Slides Wrapper -->
-<div class="slides-container h-screen w-screen overflow-y-scroll snap-y snap-mandatory">
+  
+  </h1>
+</section>
 
-    <!-- Slide 1: Intro -->
-    <section class="slide snap-start h-screen flex flex-col items-center justify-center text-[#3b2f2f]" 
-             style="background: linear-gradient(to bottom, #f4e7d3, #d9c9a5);">
-        <div class="max-w-2xl text-center">
-            <h2 class="text-5xl font-bold mb-6">Journey Through Time</h2>
-            <p class="text-lg">Explore how Carbon-14 dating helps archaeologists reveal history.</p>
-        </div>
-        <a href="{{ url_for('home') }}" class="mt-8 px-4 py-2 bg-[#3b2f2f] text-white rounded-lg hover:bg-[#5a403f]">Back to Home</a>
-    </section>
 
-    <!-- Slide 2: Science -->
-    <section class="slide snap-start h-screen flex flex-col items-center justify-center text-[#2b1d1d]" 
-             style="background: linear-gradient(to bottom, #e0d4c2, #c9b79c);">
-        <div class="max-w-2xl text-center">
-            <h2 class="text-4xl font-bold mb-6">The Science of Carbon-14</h2>
-            <p class="text-lg">Every living thing absorbs Carbon-14. When it dies, the isotope decays, giving us a clock to measure age.</p>
-        </div>
-        <a href="{{ url_for('home') }}" class="mt-8 px-4 py-2 bg-[#3b2f2f] text-white rounded-lg hover:bg-[#5a403f]">Back to Home</a>
-    </section>
 
-    <!-- Slide 3: Applications -->
-    <section class="slide snap-start h-screen flex flex-col items-center justify-center text-[#1e1414]" 
-             style="background: linear-gradient(to bottom, #d4b48f, #a67c52);">
-        <div class="max-w-2xl text-center">
-            <h2 class="text-4xl font-bold mb-6">Applications</h2>
-            <p class="text-lg mb-6">From archaeology to climate science, Carbon-14 helps unlock timelines.</p>
-            <a href="{{ url_for('input_page') }}" 
-               class="px-6 py-3 bg-[#3b2f2f] text-white rounded-lg shadow-lg hover:bg-[#5a403f] transition">
-               Try the Calculator →
-            </a>
-        </div>
-        <a href="{{ url_for('home') }}" class="mt-8 px-4 py-2 bg-[#3b2f2f] text-white rounded-lg hover:bg-[#5a403f]">Back to Home</a>
-    </section>
+<section class="relative h-screen flex flex-col items-center justify-center px-6 text-white overflow-hidden">
+  
+  <div class="animated-bg"></div>
 
-    <!-- Slide 4: Fun Fact -->
-    <section class="slide snap-start h-screen flex flex-col items-center justify-center text-[#1e1414]" 
-             style="background: linear-gradient(to bottom, #bfa57a, #8d6748);">
-        <div class="max-w-2xl text-center">
-            <h2 class="text-4xl font-bold mb-6">Fun Fact</h2>
-            <p class="text-lg">Some samples are over 50,000 years old! C-14 is reliable only within certain limits.</p>
-        </div>
-        <a href="{{ url_for('home') }}" class="mt-8 px-4 py-2 bg-[#3b2f2f] text-white rounded-lg hover:bg-[#5a403f]">Back to Home</a>
-    </section>
+ 
+  <h1 class="text-5xl md:text-7xl font-bold mb-6 flowing-text">Uncover the Past</h1>
+  <p class="text-xl md:text-2xl mb-8 text-center flowing-text">
+    A Journey Through Time with Carbon-14 Dating
+  </p>
 
-</div>
+  <a href="{{ url_for('slides') }}" 
+     class="px-8 py-4 bg-white text-[#3b2f2f] rounded-2xl text-lg font-semibold hover:bg-gray-200 shadow-lg transition btn btn-light">
+     Start Journey →
+  </a>
+</section>
 
-<!-- Splash hide script -->
+
 <script>
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        document.getElementById('splash').style.display = 'none';
-    }, 2000); // hide splash after 2 seconds
+window.addEventListener("DOMContentLoaded", () => {
+  
+  const blackScreen = document.createElement("div");
+  blackScreen.style.position = "fixed";
+  blackScreen.style.top = "0";
+  blackScreen.style.left = "0";
+  blackScreen.style.width = "100%";
+  blackScreen.style.height = "100%";
+  blackScreen.style.backgroundColor = "black";
+  blackScreen.style.display = "flex";
+  blackScreen.style.alignItems = "center";
+  blackScreen.style.justifyContent = "center";
+  blackScreen.style.zIndex = "9999";
+  blackScreen.style.color = "white";
+  blackScreen.style.fontSize = "2rem";
+  blackScreen.style.fontFamily = "sans-serif";
+  blackScreen.id = "black-screen";
+  blackScreen.innerHTML = `<span id="typed-msg"></span>`;
+  document.body.appendChild(blackScreen);
+
+  
+  new Typed("#typed-msg", {
+    strings: ["Welcome to the Journey Through Time..."],
+    typeSpeed: 50,
+    showCursor: false,
+    onComplete: () => {
+      
+      gsap.to("#black-screen", { opacity: 0, duration: 2, delay: 3, onComplete: () => blackScreen.remove() });
+
+      
+      const video = document.querySelector("video");
+      if (video) {
+        video.style.opacity = 0;
+        video.play();
+        gsap.to(video, { opacity: 1, duration: 2, delay: 5 }); 
+        gsap.fromTo(video, { scale: 1 }, { scale: 1.05, duration: 10, repeat: -1, yoyo: true, ease: "power1.inOut", delay: 5 });
+      }
+
+     
+      
+    }
+  });
 });
 </script>
+
 
 {% endblock %}
