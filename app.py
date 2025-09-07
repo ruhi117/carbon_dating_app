@@ -1,26 +1,17 @@
-# app.py
 from flask import Flask, request, render_template, redirect, url_for
 import pandas as pd
 import numpy as np
 import io, base64, os, re
 
-# -----------------------------
-# Matplotlib non-GUI backend
-# -----------------------------
 import matplotlib
-matplotlib.use('Agg')   # avoids Tk runtime errors
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-# -----------------------------
-# Flask setup
-# -----------------------------
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# -----------------------------
-# Helpers
-# -----------------------------
+
 def normalize_df(df):
     df = df.copy()
     new_cols = [re.sub(r'[^0-9a-zA-Z]+', '_', str(c)).lower().strip('_') for c in df.columns]
@@ -80,22 +71,37 @@ def calibrate_c14(raw_age, df=cal_df):
         return None
     return round(float(np.interp(raw_age, xp, fp)), 2)
 
-def contamination_guidance(raw_age, cal_age):
-    w = []
+def contamination_guidance(raw_age, cal_age, soil_pH=None, depth=None):
+    recs = []
     if raw_age is None:
-        w.append("Invalid input.")
-        return w
+        recs.append("Invalid input for C-14 age.")
+        return recs
+
     if cal_age is None:
-        w.append("⚠️ Age outside calibration range. Consider alternative methods (U-series, K-Ar).")
-        return w
-    if raw_age > 50000:
-        w.append("⚠️ Very old sample (>50k BP). C-14 may be unreliable.")
-        w.append("Suggested: Uranium-series, K-Ar, or stratigraphic correlation.")
+        recs.append("Age is outside calibration range. Consider U-series or stratigraphic dating.")
+    elif raw_age > 50000:
+        recs.append("Very old sample (>50k BP). C-14 may be unreliable. Suggest alternative methods.")
     elif raw_age < 1000:
-        w.append("⚠️ Very young sample. Check for modern contamination.")
-    w.append("📌 If uncertainty is large, request AMS or multiple replicate measurements.")
-    w.append("📌 Record soil pH, depth, and pre-treatment protocol for lab notes.")
-    return w
+        recs.append("Very young sample. Modern contamination possible.")
+
+    if soil_pH is not None:
+        if soil_pH < 6.5:
+            recs.append("Acidic soil detected. Consider liming to neutralize pH for better preservation.")
+        elif soil_pH > 7.5:
+            recs.append("Alkaline soil detected. Consider adding acidic amendments (e.g., elemental sulfur).")
+        else:
+            recs.append("Soil pH is within the optimal range for carbon dating (6.5–7.5).")
+
+    if depth is not None:
+        if depth < 30:
+            recs.append("Shallow sample. Risk of modern contamination is higher.")
+        elif depth > 200:
+            recs.append("Deep sample. Ensure proper stratigraphic context is recorded.")
+        else:
+            recs.append("Sample depth is within typical excavation range.")
+
+    recs.append("Document all pre-treatment protocols and replicate measurements for accuracy.")
+    return recs
 
 def plot_graph(raw_ages, cal_ages, df=cal_df):
     if df is None or len(df) == 0:
@@ -121,70 +127,162 @@ def plot_graph(raw_ages, cal_ages, df=cal_df):
     plt.close()
     return img_b64
 
-# -----------------------------
-# Routes
-# -----------------------------
+
 @app.route('/')
 def home():
-    return render_template('index.html')  # shows scrollable slides
+    return render_template('index.html')
 
 @app.route('/index')
 def index():
-    return render_template('index.html')  # optional alternative URL
+    return render_template('index.html')
+
+@app.route('/slides')
+def slides():
+    return render_template('slides.html')
+
+
+@app.route('/results')
+def results():
+    return render_template('results.html')
+
+
 
 @app.route('/input', methods=['GET', 'POST'])
 def input_page():
     results = []
+    summaries = []
     img_str = None
     message = None
 
     if request.method == 'POST':
         raw_ages = []
 
-        # single input
+        
         c14_text = request.form.get('c14_age', '').strip()
         if c14_text:
             try:
                 raw_ages.append(float(c14_text))
-            except:
-                message = "Could not parse the entered C-14 age. Use a number."
+            except ValueError:
+                message = "Could not parse the entered C-14 age. Use a numeric value."
 
-        # file upload
+       
         upload = request.files.get('file')
         if upload and upload.filename:
-            try:
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], upload.filename)
-                upload.save(filepath)
-                df_uploaded = pd.read_csv(filepath, skipinitialspace=True)
-                df_uploaded = normalize_df(df_uploaded)
-                if 'c14_age' in df_uploaded.columns:
-                    arr = df_uploaded['c14_age'].astype(float).tolist()
-                else:
-                    num_cols = df_uploaded.select_dtypes(include=[np.number]).columns.tolist()
-                    if not num_cols:
-                        message = "Uploaded CSV had no numeric column. Expect 'C14_age'."
-                        arr = []
+            if upload.filename.lower().endswith('.csv'):
+                try:
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], upload.filename)
+                    upload.save(filepath)
+                    df_uploaded = pd.read_csv(filepath, skipinitialspace=True)
+                    df_uploaded = normalize_df(df_uploaded)
+                    if 'c14_age' in df_uploaded.columns:
+                        arr = df_uploaded['c14_age'].astype(float).tolist()
                     else:
-                        arr = df_uploaded[num_cols[0]].astype(float).tolist()
-                raw_ages.extend(arr)
-            except Exception as e:
-                message = f"Failed to read uploaded CSV: {e}"
+                        num_cols = df_uploaded.select_dtypes(include=[np.number]).columns.tolist()
+                        if not num_cols:
+                            message = "Uploaded CSV has no numeric column. Expect 'C14_age'."
+                            arr = []
+                        else:
+                            arr = df_uploaded[num_cols[0]].astype(float).tolist()
+                    raw_ages.extend(arr)
+                except Exception as e:
+                    message = f"Failed to read uploaded CSV: {e}"
+            else:
+                message = "Only CSV files are allowed for upload."
 
+        
+        soil_pH = request.form.get('soil_pH', '').strip()
+        depth = request.form.get('depth', '').strip()
+        location = request.form.get('location', '').strip()
+        material = request.form.get('material', '').strip()
+
+        try:
+            soil_pH = float(soil_pH) if soil_pH else None
+        except ValueError:
+            message = "Soil pH must be a number."
+
+        try:
+            depth = float(depth) if depth else None
+        except ValueError:
+            message = "Depth must be a number."
+
+       
         if not raw_ages:
             if not message:
-                message = "No input provided. Enter a C-14 age or upload CSV."
+                message = "No input provided. Enter a C-14 age or upload a CSV file."
         else:
-            raw_ages = [float(x) for x in raw_ages]
+            # Calibrate ages
             cal_ages = [calibrate_c14(r) for r in raw_ages]
+
+            # Collect results
             for raw, cal in zip(raw_ages, cal_ages):
-                warnings = contamination_guidance(raw, cal)
-                results.append({'c14_age': raw, 'calibrated_age': cal, 'warnings': warnings})
+                warnings = contamination_guidance(raw, cal, soil_pH=soil_pH, depth=depth)
+                results.append({
+                    'c14_age': raw,
+                    'calibrated_age': cal,
+                    'warnings': warnings,
+                    'soil_pH': soil_pH,
+                    'depth': depth,
+                    'location': location,
+                    'material': material
+                })
+
+            # Generate calibration graph
             img_str = plot_graph(raw_ages, cal_ages)
 
-        return render_template('results.html', results=results, img_str=img_str, message=message)
+            # Generate detailed summaries
+            summaries = []
+            for r in results:
+                cal_age_str = f"{r['calibrated_age']} cal BP" if r['calibrated_age'] is not None else "Outside calibration range"
+                summary = (
+                    f"Sample details:\n"
+                    f"- Radiocarbon Age: {r['c14_age']} 14C BP\n"
+                    f"- Calibrated Age: {cal_age_str}\n"
+                    f"- Location: {r.get('location','Not provided')}\n"
+                    f"- Material: {r.get('material','Not provided')}\n"
+                    f"- Soil pH: {r.get('soil_pH','Not provided')}\n"
+                    f"- Depth: {r.get('depth','Not provided')} cm\n\n"
+                    f"Recommendations:\n"
+                )
+                for w in r['warnings']:
+                    summary += f"- {w}\n"
+                summaries.append(summary)
+
+                text = f"The sample has a radiocarbon age of {r['c14_age']} BP, calibrated to about {r['calibrated_age']} BP. "
+
+                
+                if r["soil_pH"]:
+                    if float(r["soil_pH"]) < 5.5:
+                        text += f"The soil is acidic (pH {r['soil_pH']}), which may reduce preservation quality. "
+                    else:
+                        text += f"The soil is neutral to alkaline (pH {r['soil_pH']}), favorable for preservation. "
+
+                
+                if r["depth"]:
+                    depth_val = float(r["depth"])
+                    if depth_val < 50:
+                        text += f"The depth of {depth_val} cm indicates shallow burial, vulnerable to disturbance. "
+                    elif depth_val < 200:
+                        text += f"The depth of {depth_val} cm suggests stable medium burial conditions. "
+                else:
+                    text += f"At {depth_val} cm, the sample is deeply buried, offering better preservation. "
+
+                
+                if r["material"]:
+                    text += f"The material type recorded is {r['material']}, which influences preservation accuracy. "
+                else:
+                    text += "Material type was not specified, which limits interpretation. "
+
+                
+                if r["location"]:
+                    text += f"The location is noted as {r['location']}. "
+
+                
+                text += "Recommendation: Cross-check with nearby stratigraphic layers and apply soil conservation methods if required."
+                summaries.append(text)
+        return render_template('results.html', results=results, img_str=img_str, message=message, summaries=summaries)
 
     return render_template('input.html', message=message)
 
-# -----------------------------
+
 if __name__ == '__main__':
     app.run(debug=True)
